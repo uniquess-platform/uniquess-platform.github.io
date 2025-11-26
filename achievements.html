@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Достижения - Юнию</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Юнию</h1>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="tasks.html" class="nav-link">Задачи</a>
+                    <a href="vacancies.html" class="nav-link">Вакансии</a>
+                    <a href="leaderboard.html" class="nav-link">Лидеры</a>
+                    <a href="achievements.html" class="nav-link active">Достижения</a>
+                    <a href="profile.html" class="nav-link">Профиль</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <div class="container">
+                <h1>Достижения</h1>
+                <p>Собирайте достижения за ваши успехи и достижения</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="container">
+                <div class="leaderboard-filters">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="unlocked">Полученные</button>
+                    <button class="filter-btn" data-filter="locked">Не полученные</button>
+                </div>
+
+                <div class="achievements-grid" id="achievements-container">
+                    <!-- Загрузка через JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Юнию</h3>
+                    <p>Мост между талантливыми студентами и работодателями</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <a href="tasks.html">Задачи</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="leaderboard.html">Лидеры</a>
+                    <a href="achievements.html">Достижения</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Профиль</h4>
+                    <a href="profile.html">Мой профиль</a>
+                    <a href="employer-profile.html">Для работодателей</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Юнию. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderAchievements('all');
+            setupFilters();
+        });
+
+        function renderAchievements(filter) {
+            let achievements = appData.achievements;
+
+            if (filter === 'unlocked') {
+                achievements = achievements.filter(a => a.unlocked);
+            } else if (filter === 'locked') {
+                achievements = achievements.filter(a => !a.unlocked);
+            }
+
+            const container = document.getElementById('achievements-container');
+            container.innerHTML = achievements.map(achievement => `
+                <div class="achievement-card ${achievement.unlocked ? 'unlocked' : 'locked'}">
+                    <div class="achievement-icon">${achievement.icon}</div>
+                    <h3 class="achievement-title">${achievement.title}</h3>
+                    <p class="achievement-desc">${achievement.description}</p>
+                    ${achievement.unlocked ? '<span class="badge badge-success" style="margin-top: 0.5rem;">Получено</span>' : ''}
+                </div>
+            `).join('');
+        }
+
+        function setupFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    renderAchievements(this.dataset.filter);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+

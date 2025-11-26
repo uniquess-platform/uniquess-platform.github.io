@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль работодателя - Юнию</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Юнию</h1>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="tasks.html" class="nav-link">Задачи</a>
+                    <a href="vacancies.html" class="nav-link">Вакансии</a>
+                    <a href="leaderboard.html" class="nav-link">Лидеры</a>
+                    <a href="achievements.html" class="nav-link">Достижения</a>
+                    <a href="profile.html" class="nav-link">Профиль</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <div class="container">
+                <h1>Панель работодателя</h1>
+                <p>Управляйте задачами, вакансиями и проверяйте решения</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="container">
+                <div class="leaderboard-filters">
+                    <button class="filter-btn active" data-tab="tasks">Мои задачи</button>
+                    <button class="filter-btn" data-tab="vacancies">Мои вакансии</button>
+                    <button class="filter-btn" data-tab="solutions">Проверка решений</button>
+                </div>
+
+                <div id="tasks-tab" class="tab-content">
+                    <div style="margin-bottom: 1.5rem;">
+                        <button class="btn btn-primary" onclick="showCreateTaskForm()">Создать задачу</button>
+                    </div>
+                    <div id="employer-tasks">
+                        <!-- Загрузка через JS -->
+                    </div>
+                </div>
+
+                <div id="vacancies-tab" class="tab-content" style="display: none;">
+                    <div style="margin-bottom: 1.5rem;">
+                        <button class="btn btn-primary" onclick="showCreateVacancyForm()">Создать вакансию</button>
+                    </div>
+                    <div id="employer-vacancies">
+                        <!-- Загрузка через JS -->
+                    </div>
+                </div>
+
+                <div id="solutions-tab" class="tab-content" style="display: none;">
+                    <div id="pending-solutions">
+                        <!-- Загрузка через JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Юнию</h3>
+                    <p>Мост между талантливыми студентами и работодателями</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <a href="tasks.html">Задачи</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="leaderboard.html">Лидеры</a>
+                    <a href="achievements.html">Достижения</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Профиль</h4>
+                    <a href="profile.html">Мой профиль</a>
+                    <a href="employer-profile.html">Для работодателей</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Юнию. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const currentEmployerId = 1; // Текущий работодатель
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadEmployerTasks();
+            setupTabs();
+        });
+
+        function setupTabs() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.dataset.tab;
+                    
+                    // Убираем активность со всех кнопок и скрываем все табы
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+                    
+                    // Активируем выбранную кнопку и показываем таб
+                    this.classList.add('active');
+                    document.getElementById(tab + '-tab').style.display = 'block';
+                    
+                    // Загружаем данные для таба
+                    if (tab === 'tasks') {
+                        loadEmployerTasks();
+                    } else if (tab === 'vacancies') {
+                        loadEmployerVacancies();
+                    } else if (tab === 'solutions') {
+                        loadPendingSolutions();
+                    }
+                });
+            });
+        }
+
+        function loadEmployerTasks() {
+            const tasks = getEmployerTasks(currentEmployerId);
+            const container = document.getElementById('employer-tasks');
+            
+            if (tasks.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Нет созданных задач</p>';
+                return;
+            }
+
+            container.innerHTML = tasks.map(task => {
+                const difficultyClass = `difficulty-${task.difficulty}`;
+                const difficultyText = getDifficultyText(task.difficulty);
+                const solutionsCount = appData.solutions.filter(s => s.taskId === task.id).length;
+                const approvedCount = appData.solutions.filter(s => s.taskId === task.id && s.status === 'approved').length;
+
+                return `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <div>
+                                <h3 class="task-title">${task.title}</h3>
+                                <div class="task-company">${task.company}</div>
+                            </div>
+                            <span class="task-difficulty ${difficultyClass}">${difficultyText}</span>
+                        </div>
+                        <p class="card-content">${task.description}</p>
+                        <div class="task-meta">
+                            <span>📊 Решений: ${solutionsCount}</span>
+                            <span>✅ Одобрено: ${approvedCount}</span>
+                            <span>📅 ${formatDate(task.createdAt)}</span>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <a href="task-detail.html?id=${task.id}" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadEmployerVacancies() {
+            const vacancies = getEmployerVacancies(currentEmployerId);
+            const container = document.getElementById('employer-vacancies');
+            
+            if (vacancies.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Нет созданных вакансий</p>';
+                return;
+            }
+
+            container.innerHTML = vacancies.map(vacancy => {
+                return `
+                    <div class="vacancy-card">
+                        <div class="vacancy-header">
+                            <div>
+                                <h3 class="vacancy-title">${vacancy.title}</h3>
+                                <div class="vacancy-company">${vacancy.company}</div>
+                            </div>
+                            <div class="vacancy-salary">${vacancy.salary}</div>
+                        </div>
+                        <p class="card-content">${vacancy.description}</p>
+                        <div class="task-meta">
+                            <span>📅 ${formatDate(vacancy.createdAt)}</span>
+                            <span>📊 Статус: ${vacancy.status === 'open' ? 'Открыта' : 'Закрыта'}</span>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <a href="vacancy-detail.html?id=${vacancy.id}" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadPendingSolutions() {
+            // Получаем все задачи работодателя
+            const employerTasks = getEmployerTasks(currentEmployerId);
+            const taskIds = employerTasks.map(t => t.id);
+            
+            // Получаем все решения на проверке для этих задач
+            const pendingSolutions = appData.solutions.filter(s => 
+                taskIds.includes(s.taskId) && s.status === 'pending'
+            );
+
+            const container = document.getElementById('pending-solutions');
+            
+            if (pendingSolutions.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Нет решений на проверке</p>';
+                return;
+            }
+
+            container.innerHTML = pendingSolutions.map(solution => {
+                const task = appData.tasks.find(t => t.id === solution.taskId);
+                const user = appData.users.find(u => u.id === solution.userId);
+
+                return `
+                    <div class="card" style="margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                            <div>
+                                <h3 style="color: var(--white);">${task.title}</h3>
+                                <p style="color: var(--gray-white);">Решение от: ${user.name}</p>
+                                <p style="color: var(--gray-white); font-size: 0.9rem;">${formatDate(solution.completedAt)}</p>
+                            </div>
+                            <span class="badge badge-warning">На проверке</span>
+                        </div>
+                        <div style="margin: 1rem 0;">
+                            <label class="form-label">Фидбек</label>
+                            <textarea class="form-textarea" id="feedback-${solution.id}" placeholder="Оставьте фидбек по решению..."></textarea>
+                        </div>
+                        <div>
+                            <button class="btn btn-primary" onclick="approveSolution(${solution.id})">Одобрить</button>
+                            <button class="btn btn-secondary" onclick="rejectSolution(${solution.id})" style="margin-left: 0.5rem;">Отклонить</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function approveSolution(solutionId) {
+            const solution = appData.solutions.find(s => s.id === solutionId);
+            if (!solution) return;
+
+            const feedback = document.getElementById(`feedback-${solutionId}`).value;
+            solution.status = 'approved';
+            solution.feedback = feedback || 'Решение одобрено!';
+
+            alert('Решение одобрено!');
+            loadPendingSolutions();
+        }
+
+        function rejectSolution(solutionId) {
+            const solution = appData.solutions.find(s => s.id === solutionId);
+            if (!solution) return;
+
+            const feedback = document.getElementById(`feedback-${solutionId}`).value;
+            solution.status = 'rejected';
+            solution.feedback = feedback || 'Решение отклонено.';
+
+            alert('Решение отклонено.');
+            loadPendingSolutions();
+        }
+
+        function showCreateTaskForm() {
+            const form = prompt('Введите название задачи:');
+            if (form) {
+                alert('В реальном приложении здесь была бы форма создания задачи. Задача будет отправлена на модерацию администрации.');
+            }
+        }
+
+        function showCreateVacancyForm() {
+            alert('В реальном приложении здесь была бы форма создания вакансии.');
+        }
+    </script>
+</body>
+</html>
+

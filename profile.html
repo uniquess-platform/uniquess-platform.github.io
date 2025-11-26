@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль - Юнию</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Юнию</h1>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="tasks.html" class="nav-link">Задачи</a>
+                    <a href="vacancies.html" class="nav-link">Вакансии</a>
+                    <a href="leaderboard.html" class="nav-link">Лидеры</a>
+                    <a href="achievements.html" class="nav-link">Достижения</a>
+                    <a href="profile.html" class="nav-link active">Профиль</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="profile-header">
+            <div class="container">
+                <div class="profile-info">
+                    <div class="avatar" id="user-avatar">👤</div>
+                    <div class="profile-details">
+                        <h2 id="user-name">Загрузка...</h2>
+                        <div class="level-display">
+                            <span class="level-number" id="user-level">1</span>
+                            <span class="level-label">Уровень</span>
+                        </div>
+                        <div class="profile-stats">
+                            <div class="profile-stat">
+                                <div class="profile-stat-value" id="user-experience">0</div>
+                                <div class="profile-stat-label">Опыт</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-value" id="solved-count">0</div>
+                                <div class="profile-stat-label">Решено задач</div>
+                            </div>
+                            <div class="profile-stat">
+                                <div class="profile-stat-value" id="achievements-count">0</div>
+                                <div class="profile-stat-label">Достижений</div>
+                            </div>
+                        </div>
+                        <div class="progress-bar" style="margin-top: 1rem; max-width: 300px;">
+                            <div class="progress-fill" id="experience-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div class="card">
+                        <h3 class="card-title">Задания на сегодня</h3>
+                        <div id="daily-quests">
+                            <!-- Загрузка через JS -->
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Задания на неделю</h3>
+                        <div id="weekly-quests">
+                            <!-- Загрузка через JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="card-title">Решенные задачи</h3>
+                    <div class="leaderboard-filters" style="margin-bottom: 1rem;">
+                        <button class="filter-btn active" data-filter="all">Все</button>
+                        <button class="filter-btn" data-filter="pinned">Закрепленные</button>
+                    </div>
+                    <div id="solved-tasks">
+                        <!-- Загрузка через JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Юнию</h3>
+                    <p>Мост между талантливыми студентами и работодателями</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <a href="tasks.html">Задачи</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="leaderboard.html">Лидеры</a>
+                    <a href="achievements.html">Достижения</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Профиль</h4>
+                    <a href="profile.html">Мой профиль</a>
+                    <a href="employer-profile.html">Для работодателей</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Юнию. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+            loadQuests();
+            loadSolvedTasks();
+        });
+
+        function loadUserProfile() {
+            const user = appData.users[0]; // Текущий пользователь
+            const solvedCount = appData.solutions.filter(s => s.userId === user.id && s.status === 'approved').length;
+            const totalExperience = appData.solutions
+                .filter(s => s.userId === user.id && s.status === 'approved')
+                .reduce((sum, s) => {
+                    const task = appData.tasks.find(t => t.id === s.taskId);
+                    const exp = task ? (task.experience || (task.difficulty === 'easy' ? 10 : task.difficulty === 'medium' ? 25 : 50)) : 0;
+                    return sum + exp;
+                }, 0);
+            
+            const level = Math.floor(totalExperience / 100) + 1;
+            const expToNextLevel = totalExperience % 100;
+            const expProgress = (expToNextLevel / 100) * 100;
+
+            document.getElementById('user-name').textContent = user.name;
+            document.getElementById('user-level').textContent = level;
+            document.getElementById('user-experience').textContent = totalExperience;
+            document.getElementById('solved-count').textContent = solvedCount;
+            document.getElementById('achievements-count').textContent = appData.achievements.filter(a => a.unlocked).length;
+            document.getElementById('experience-progress').style.width = expProgress + '%';
+        }
+
+        function loadQuests() {
+            const dailyQuests = appData.quests.filter(q => q.type === 'daily');
+            const weeklyQuests = appData.quests.filter(q => q.type === 'weekly');
+
+            document.getElementById('daily-quests').innerHTML = dailyQuests.map(quest => `
+                <div style="padding: 1rem; background: var(--dark-gray-2); border-radius: 6px; margin-bottom: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: var(--white);">${quest.title}</strong>
+                            <p style="color: var(--gray-white); font-size: 0.9rem; margin-top: 0.25rem;">${quest.description}</p>
+                        </div>
+                        <span class="badge ${quest.completed ? 'badge-success' : 'badge-warning'}">
+                            ${quest.completed ? '✓ Выполнено' : quest.progress + '/' + quest.target}
+                        </span>
+                    </div>
+                    <div class="progress-bar" style="margin-top: 0.5rem;">
+                        <div class="progress-fill" style="width: ${(quest.progress / quest.target) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('') || '<p style="color: var(--gray-white);">Нет заданий</p>';
+
+            document.getElementById('weekly-quests').innerHTML = weeklyQuests.map(quest => `
+                <div style="padding: 1rem; background: var(--dark-gray-2); border-radius: 6px; margin-bottom: 0.5rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <strong style="color: var(--white);">${quest.title}</strong>
+                            <p style="color: var(--gray-white); font-size: 0.9rem; margin-top: 0.25rem;">${quest.description}</p>
+                        </div>
+                        <span class="badge ${quest.completed ? 'badge-success' : 'badge-warning'}">
+                            ${quest.completed ? '✓ Выполнено' : quest.progress + '/' + quest.target}
+                        </span>
+                    </div>
+                    <div class="progress-bar" style="margin-top: 0.5rem;">
+                        <div class="progress-fill" style="width: ${(quest.progress / quest.target) * 100}%"></div>
+                    </div>
+                </div>
+            `).join('') || '<p style="color: var(--gray-white);">Нет заданий</p>';
+        }
+
+        function loadSolvedTasks(filter = 'all') {
+            const userId = 1; // Текущий пользователь
+            const solvedSolutions = appData.solutions.filter(s => s.userId === userId && s.status === 'approved');
+            let solvedTasks = solvedSolutions.map(s => {
+                const task = appData.tasks.find(t => t.id === s.taskId);
+                return { ...task, solution: s, pinned: s.pinned || false };
+            }).filter(t => t.id);
+
+            if (filter === 'pinned') {
+                solvedTasks = solvedTasks.filter(t => t.pinned);
+            }
+
+            const container = document.getElementById('solved-tasks');
+            if (solvedTasks.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Нет решенных задач</p>';
+                return;
+            }
+
+            container.innerHTML = solvedTasks.map(task => {
+                const difficultyClass = `difficulty-${task.difficulty}`;
+                const difficultyText = {
+                    easy: 'Легкая',
+                    medium: 'Средняя',
+                    hard: 'Сложная'
+                }[task.difficulty];
+
+                return `
+                    <div class="task-card">
+                        <div class="task-header">
+                            <div>
+                                <h3 class="task-title">${task.title} ${task.pinned ? '📌' : ''}</h3>
+                                <div class="task-company">${task.company}</div>
+                            </div>
+                            <span class="task-difficulty ${difficultyClass}">${difficultyText}</span>
+                        </div>
+                        <p class="card-content">${task.description}</p>
+                        <div class="task-meta">
+                            <span>✅ Решено: ${new Date(task.solution.completedAt).toLocaleDateString('ru-RU')}</span>
+                            ${task.solution.feedback ? `<span>💬 Фидбек: ${task.solution.feedback}</span>` : ''}
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            <button class="btn btn-outline" onclick="togglePin(${task.id})">
+                                ${task.pinned ? 'Открепить' : 'Закрепить'}
+                            </button>
+                            <a href="task-detail.html?id=${task.id}" class="btn btn-primary" style="margin-left: 0.5rem;">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function togglePin(taskId) {
+            const solution = appData.solutions.find(s => s.taskId === taskId && s.userId === 1);
+            if (solution) {
+                solution.pinned = !solution.pinned;
+                loadSolvedTasks(document.querySelector('.filter-btn.active')?.dataset.filter || 'all');
+            }
+        }
+
+        // Фильтры для решенных задач
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                loadSolvedTasks(this.dataset.filter);
+            });
+        });
+    </script>
+</body>
+</html>
+

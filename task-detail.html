@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали задачи - Юнию</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Юнию</h1>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="tasks.html" class="nav-link">Задачи</a>
+                    <a href="vacancies.html" class="nav-link">Вакансии</a>
+                    <a href="leaderboard.html" class="nav-link">Лидеры</a>
+                    <a href="achievements.html" class="nav-link">Достижения</a>
+                    <a href="profile.html" class="nav-link">Профиль</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-section">
+            <div class="container">
+                <div style="max-width: 900px; margin: 0 auto;">
+                    <a href="tasks.html" style="color: var(--accent); text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Назад к задачам</a>
+                    
+                    <div id="task-detail" class="card" style="margin-top: 1rem;">
+                        <!-- Загрузка через JS -->
+                    </div>
+
+                    <div id="solution-section" class="card" style="margin-top: 2rem;">
+                        <!-- Загрузка через JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Юнию</h3>
+                    <p>Мост между талантливыми студентами и работодателями</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <a href="tasks.html">Задачи</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="leaderboard.html">Лидеры</a>
+                    <a href="achievements.html">Достижения</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Профиль</h4>
+                    <a href="profile.html">Мой профиль</a>
+                    <a href="employer-profile.html">Для работодателей</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Юнию. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const taskId = parseInt(urlParams.get('id'));
+            
+            if (taskId) {
+                loadTaskDetail(taskId);
+            } else {
+                document.getElementById('task-detail').innerHTML = '<p style="color: var(--gray-white);">Задача не найдена</p>';
+            }
+        });
+
+        function loadTaskDetail(taskId) {
+            const task = appData.tasks.find(t => t.id === taskId);
+            if (!task) {
+                document.getElementById('task-detail').innerHTML = '<p style="color: var(--gray-white);">Задача не найдена</p>';
+                return;
+            }
+
+            const difficultyClass = `difficulty-${task.difficulty}`;
+            const difficultyText = getDifficultyText(task.difficulty);
+            const experience = getTaskExperience(task);
+            const solvedCount = appData.solutions.filter(s => s.taskId === taskId && s.status === 'approved').length;
+            const isSolved = isTaskSolved(taskId, 1); // Текущий пользователь
+            const userSolution = appData.solutions.find(s => s.taskId === taskId && s.userId === 1);
+
+            document.getElementById('task-detail').innerHTML = `
+                <div class="task-header">
+                    <div>
+                        <h2 class="task-title">${task.title}</h2>
+                        <div class="task-company">${task.company}</div>
+                    </div>
+                    <span class="task-difficulty ${difficultyClass}">${difficultyText}</span>
+                </div>
+                <div style="margin: 1.5rem 0;">
+                    <h3 style="color: var(--white); margin-bottom: 0.5rem;">Описание задачи</h3>
+                    <p class="card-content" style="font-size: 1.1rem; line-height: 1.8;">${task.description}</p>
+                </div>
+                <div class="task-meta">
+                    <span>💎 Опыт: ${experience}</span>
+                    <span>📅 ${formatDate(task.createdAt)}</span>
+                    <span>👥 Решили: ${solvedCount}</span>
+                </div>
+                ${task.tags && task.tags.length > 0 ? `
+                    <div style="margin-top: 1rem;">
+                        <div class="vacancy-tags">
+                            ${task.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+
+            // Секция решения
+            if (isSolved && userSolution) {
+                document.getElementById('solution-section').innerHTML = `
+                    <h3 style="color: var(--white); margin-bottom: 1rem;">Ваше решение</h3>
+                    <div style="padding: 1rem; background: var(--dark-gray-2); border-radius: 6px; margin-bottom: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span class="badge badge-success">✓ Одобрено</span>
+                            <span style="color: var(--gray-white);">${formatDate(userSolution.completedAt)}</span>
+                        </div>
+                        ${userSolution.feedback ? `
+                            <div style="margin-top: 1rem; padding: 1rem; background: var(--dark-gray-1); border-radius: 6px;">
+                                <strong style="color: var(--white);">Фидбек от работодателя:</strong>
+                                <p style="color: var(--gray-white); margin-top: 0.5rem;">${userSolution.feedback}</p>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            } else {
+                document.getElementById('solution-section').innerHTML = `
+                    <h3 style="color: var(--white); margin-bottom: 1rem;">Отправить решение</h3>
+                    <form id="solution-form" onsubmit="submitSolution(event, ${taskId})">
+                        <div class="form-group">
+                            <label class="form-label">Ваше решение</label>
+                            <textarea class="form-textarea" name="solution" required placeholder="Опишите ваше решение задачи..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Ссылка на код (если есть)</label>
+                            <input type="url" class="form-input" name="codeLink" placeholder="https://github.com/...">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Отправить на проверку</button>
+                    </form>
+                `;
+            }
+        }
+
+        function submitSolution(event, taskId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            // В реальном приложении здесь был бы запрос к серверу
+            // Для примера просто добавляем решение в данные
+            const newSolution = {
+                id: appData.solutions.length + 1,
+                taskId: taskId,
+                userId: 1,
+                status: 'pending',
+                completedAt: new Date().toISOString().split('T')[0],
+                feedback: null,
+                pinned: false
+            };
+            
+            appData.solutions.push(newSolution);
+            
+            alert('Решение отправлено на проверку! Работодатель рассмотрит его в ближайшее время.');
+            loadTaskDetail(taskId);
+        }
+    </script>
+</body>
+</html>
+

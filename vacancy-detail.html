@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали вакансии - Юнию</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Юнию</h1>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="tasks.html" class="nav-link">Задачи</a>
+                    <a href="vacancies.html" class="nav-link">Вакансии</a>
+                    <a href="leaderboard.html" class="nav-link">Лидеры</a>
+                    <a href="achievements.html" class="nav-link">Достижения</a>
+                    <a href="profile.html" class="nav-link">Профиль</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="content-section">
+            <div class="container">
+                <div style="max-width: 900px; margin: 0 auto;">
+                    <a href="vacancies.html" style="color: var(--accent); text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Назад к вакансиям</a>
+                    
+                    <div id="vacancy-detail" class="card" style="margin-top: 1rem;">
+                        <!-- Загрузка через JS -->
+                    </div>
+
+                    <div id="application-section" class="card" style="margin-top: 2rem;">
+                        <!-- Загрузка через JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Юнию</h3>
+                    <p>Мост между талантливыми студентами и работодателями</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <a href="tasks.html">Задачи</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="leaderboard.html">Лидеры</a>
+                    <a href="achievements.html">Достижения</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Профиль</h4>
+                    <a href="profile.html">Мой профиль</a>
+                    <a href="employer-profile.html">Для работодателей</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Юнию. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const vacancyId = parseInt(urlParams.get('id'));
+            
+            if (vacancyId) {
+                loadVacancyDetail(vacancyId);
+            } else {
+                document.getElementById('vacancy-detail').innerHTML = '<p style="color: var(--gray-white);">Вакансия не найдена</p>';
+            }
+        });
+
+        function loadVacancyDetail(vacancyId) {
+            const vacancy = appData.vacancies.find(v => v.id === vacancyId);
+            if (!vacancy) {
+                document.getElementById('vacancy-detail').innerHTML = '<p style="color: var(--gray-white);">Вакансия не найдена</p>';
+                return;
+            }
+
+            const requiredTasks = vacancy.requiredTaskIds.map(id => {
+                return appData.tasks.find(t => t.id === id);
+            }).filter(Boolean);
+
+            const solvedTasks = requiredTasks.filter(t => isTaskSolved(t.id, 1));
+            const canApply = solvedTasks.length === requiredTasks.length;
+
+            document.getElementById('vacancy-detail').innerHTML = `
+                <div class="vacancy-header">
+                    <div>
+                        <h2 class="vacancy-title">${vacancy.title}</h2>
+                        <div class="vacancy-company">${vacancy.company}</div>
+                    </div>
+                    <div class="vacancy-salary">${vacancy.salary}</div>
+                </div>
+                <div style="margin: 1.5rem 0;">
+                    <h3 style="color: var(--white); margin-bottom: 0.5rem;">Описание</h3>
+                    <p class="card-content" style="font-size: 1.1rem; line-height: 1.8;">${vacancy.description}</p>
+                </div>
+                <div class="vacancy-tags" style="margin: 1rem 0;">
+                    <span class="tag">${vacancy.type === 'remote' ? 'Удаленно' : vacancy.type === 'hybrid' ? 'Гибрид' : 'Офис'}</span>
+                    <span class="tag">${vacancy.experience}</span>
+                    ${vacancy.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                </div>
+                ${requiredTasks.length > 0 ? `
+                    <div style="margin-top: 1.5rem; padding: 1.5rem; background: var(--dark-gray-2); border-radius: 8px;">
+                        <h3 style="color: var(--white); margin-bottom: 1rem;">Необходимо решить задачи для отклика:</h3>
+                        <div>
+                            ${requiredTasks.map(task => {
+                                const isSolved = isTaskSolved(task.id, 1);
+                                return `
+                                    <div style="padding: 1rem; background: var(--dark-gray-1); border-radius: 6px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                                        <div>
+                                            <a href="task-detail.html?id=${task.id}" style="color: var(--accent); text-decoration: none;">
+                                                <strong>${task.title}</strong>
+                                            </a>
+                                            <span class="task-difficulty difficulty-${task.difficulty}" style="margin-left: 0.5rem;">
+                                                ${getDifficultyText(task.difficulty)}
+                                            </span>
+                                        </div>
+                                        ${isSolved ? 
+                                            '<span class="badge badge-success">✓ Решено</span>' : 
+                                            '<span class="badge badge-warning">Не решено</span>'
+                                        }
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        <div style="margin-top: 1rem; padding: 1rem; background: var(--dark-gray-1); border-radius: 6px;">
+                            <strong style="color: ${canApply ? 'var(--accent)' : 'var(--gray-white)'};">
+                                ${canApply ? 
+                                    '✓ Все задачи решены! Вы можете откликнуться на вакансию.' : 
+                                    `Осталось решить ${requiredTasks.length - solvedTasks.length} из ${requiredTasks.length} задач`
+                                }
+                            </strong>
+                        </div>
+                    </div>
+                ` : ''}
+            `;
+
+            // Секция отклика
+            if (canApply) {
+                document.getElementById('application-section').innerHTML = `
+                    <h3 style="color: var(--white); margin-bottom: 1rem;">Откликнуться на вакансию</h3>
+                    <form id="application-form" onsubmit="submitApplication(event, ${vacancyId})">
+                        <div class="form-group">
+                            <label class="form-label">Сопроводительное письмо</label>
+                            <textarea class="form-textarea" name="coverLetter" required placeholder="Расскажите, почему вы подходите на эту позицию..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Отправить отклик</button>
+                    </form>
+                `;
+            } else {
+                document.getElementById('application-section').innerHTML = `
+                    <div style="padding: 1.5rem; background: var(--dark-gray-2); border-radius: 8px; text-align: center;">
+                        <p style="color: var(--gray-white); margin-bottom: 1rem;">
+                            Для отклика на эту вакансию необходимо решить все прикрепленные задачи.
+                        </p>
+                        <a href="tasks.html" class="btn btn-primary">Перейти к задачам</a>
+                    </div>
+                `;
+            }
+        }
+
+        function submitApplication(event, vacancyId) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            
+            // В реальном приложении здесь был бы запрос к серверу
+            alert('Отклик отправлен! Работодатель рассмотрит вашу кандидатуру в ближайшее время.');
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
+

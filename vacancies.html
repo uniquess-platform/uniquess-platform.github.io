@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вакансии - Юнию</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>Юнию</h1>
+                </div>
+                <nav class="nav">
+                    <a href="index.html" class="nav-link">Главная</a>
+                    <a href="tasks.html" class="nav-link">Задачи</a>
+                    <a href="vacancies.html" class="nav-link active">Вакансии</a>
+                    <a href="leaderboard.html" class="nav-link">Лидеры</a>
+                    <a href="achievements.html" class="nav-link">Достижения</a>
+                    <a href="profile.html" class="nav-link">Профиль</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="page-header">
+            <div class="container">
+                <h1>Вакансии</h1>
+                <p>Найдите работу мечты, решив задачи от работодателей</p>
+            </div>
+        </div>
+
+        <div class="content-section">
+            <div class="container">
+                <div class="leaderboard-filters">
+                    <button class="filter-btn active" data-filter="all">Все вакансии</button>
+                    <button class="filter-btn" data-filter="open">Открытые</button>
+                    <button class="filter-btn" data-filter="remote">Удаленная работа</button>
+                </div>
+
+                <div id="vacancies-container">
+                    <!-- Загрузка через JS -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Юнию</h3>
+                    <p>Мост между талантливыми студентами и работодателями</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Навигация</h4>
+                    <a href="tasks.html">Задачи</a>
+                    <a href="vacancies.html">Вакансии</a>
+                    <a href="leaderboard.html">Лидеры</a>
+                    <a href="achievements.html">Достижения</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Профиль</h4>
+                    <a href="profile.html">Мой профиль</a>
+                    <a href="employer-profile.html">Для работодателей</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Юнию. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            renderVacancies('all');
+            setupFilters();
+        });
+
+        function renderVacancies(filter) {
+            let vacancies = appData.vacancies;
+
+            if (filter === 'open') {
+                vacancies = vacancies.filter(v => v.status === 'open');
+            } else if (filter === 'remote') {
+                vacancies = vacancies.filter(v => v.type === 'remote');
+            }
+
+            const container = document.getElementById('vacancies-container');
+            if (vacancies.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Вакансий не найдено</p>';
+                return;
+            }
+
+            container.innerHTML = vacancies.map(vacancy => {
+                const requiredTasks = vacancy.requiredTaskIds.map(id => {
+                    const task = appData.tasks.find(t => t.id === id);
+                    return task ? task.title : '';
+                }).filter(Boolean);
+
+                return `
+                    <div class="vacancy-card">
+                        <div class="vacancy-header">
+                            <div>
+                                <h3 class="vacancy-title">${vacancy.title}</h3>
+                                <div class="vacancy-company">${vacancy.company}</div>
+                            </div>
+                            <div class="vacancy-salary">${vacancy.salary}</div>
+                        </div>
+                        <p class="card-content">${vacancy.description}</p>
+                        <div class="vacancy-tags">
+                            <span class="tag">${vacancy.type === 'remote' ? 'Удаленно' : 'Офис'}</span>
+                            <span class="tag">${vacancy.experience}</span>
+                            ${vacancy.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                        ${requiredTasks.length > 0 ? `
+                            <div style="margin-top: 1rem; padding: 1rem; background: var(--dark-gray-2); border-radius: 6px;">
+                                <strong style="color: var(--white);">Необходимо решить задачи:</strong>
+                                <ul style="margin-top: 0.5rem; color: var(--gray-white);">
+                                    ${requiredTasks.map(task => `<li>${task}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+                        <div style="margin-top: 1rem;">
+                            <a href="vacancy-detail.html?id=${vacancy.id}" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function setupFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    renderVacancies(this.dataset.filter);
+                });
+            });
+        }
+    </script>
+</body>
+</html>
+
