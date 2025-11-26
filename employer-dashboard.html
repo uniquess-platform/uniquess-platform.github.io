@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Профиль работодателя - Юнию</title>
+    <title>Панель работодателя - Юнию</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -35,6 +35,7 @@
                     <button class="filter-btn active" data-tab="tasks">Мои задачи</button>
                     <button class="filter-btn" data-tab="vacancies">Мои вакансии</button>
                     <button class="filter-btn" data-tab="solutions">Проверка решений</button>
+                    <button class="filter-btn" data-tab="stats">Статистика</button>
                 </div>
 
                 <div id="tasks-tab" class="tab-content">
@@ -60,6 +61,27 @@
                         <!-- Загрузка через JS -->
                     </div>
                 </div>
+
+                <div id="stats-tab" class="tab-content" style="display: none;">
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <div class="stat-number" id="emp-stat-tasks">0</div>
+                            <div class="stat-label">Созданных задач</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="emp-stat-vacancies">0</div>
+                            <div class="stat-label">Открытых вакансий</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="emp-stat-solutions">0</div>
+                            <div class="stat-label">Решений на проверке</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-number" id="emp-stat-approved">0</div>
+                            <div class="stat-label">Одобренных решений</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
@@ -73,15 +95,12 @@
                 </div>
                 <div class="footer-section">
                     <h4>Навигация</h4>
-                    <a href="tasks.html">Задачи</a>
-                    <a href="vacancies.html">Вакансии</a>
-                    <a href="leaderboard.html">Лидеры</a>
-                    <a href="achievements.html">Достижения</a>
+                    <a href="index.html">Для студентов</a>
+                    <a href="employer-dashboard.html">Панель работодателя</a>
                 </div>
                 <div class="footer-section">
                     <h4>Профиль</h4>
-                    <a href="profile.html">Мой профиль</a>
-                    <a href="employer-dashboard.html">Для работодателей</a>
+                    <a href="employer-dashboard.html">Панель работодателя</a>
                 </div>
             </div>
             <div class="footer-bottom">
@@ -98,6 +117,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadEmployerTasks();
             setupTabs();
+            loadStats();
         });
 
         function setupTabs() {
@@ -121,6 +141,8 @@
                         loadEmployerVacancies();
                     } else if (tab === 'solutions') {
                         loadPendingSolutions();
+                    } else if (tab === 'stats') {
+                        loadStats();
                     }
                 });
             });
@@ -240,6 +262,23 @@
             }).join('');
         }
 
+        function loadStats() {
+            const tasks = getEmployerTasks(currentEmployerId);
+            const vacancies = getEmployerVacancies(currentEmployerId);
+            const taskIds = tasks.map(t => t.id);
+            const pendingSolutions = appData.solutions.filter(s => 
+                taskIds.includes(s.taskId) && s.status === 'pending'
+            );
+            const approvedSolutions = appData.solutions.filter(s => 
+                taskIds.includes(s.taskId) && s.status === 'approved'
+            );
+
+            document.getElementById('emp-stat-tasks').textContent = tasks.length;
+            document.getElementById('emp-stat-vacancies').textContent = vacancies.filter(v => v.status === 'open').length;
+            document.getElementById('emp-stat-solutions').textContent = pendingSolutions.length;
+            document.getElementById('emp-stat-approved').textContent = approvedSolutions.length;
+        }
+
         function approveSolution(solutionId) {
             const solution = appData.solutions.find(s => s.id === solutionId);
             if (!solution) return;
@@ -250,6 +289,7 @@
 
             alert('Решение одобрено!');
             loadPendingSolutions();
+            loadStats();
         }
 
         function rejectSolution(solutionId) {
@@ -262,6 +302,7 @@
 
             alert('Решение отклонено.');
             loadPendingSolutions();
+            loadStats();
         }
 
         function showCreateTaskForm() {

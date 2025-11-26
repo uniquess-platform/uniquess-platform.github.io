@@ -7,6 +7,7 @@
 
 :root {
     --accent: #407dc4;
+    --accent-gradient: linear-gradient(135deg, #407dc4 0%, #758ECD 100%);
     --bg-black: #131314;
     --dark-gray-1: #1e1f20;
     --dark-gray-2: #282a2c;
@@ -45,7 +46,10 @@ body {
 }
 
 .logo h1 {
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 1.8rem;
     font-weight: bold;
 }
@@ -64,7 +68,10 @@ body {
 
 .nav-link:hover,
 .nav-link.active {
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 /* Buttons */
@@ -81,13 +88,31 @@ body {
 }
 
 .btn-primary {
-    background-color: var(--accent);
+    background: var(--accent-gradient);
     color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.btn-primary:hover::before {
+    opacity: 1;
 }
 
 .btn-primary:hover {
-    background-color: #3569a8;
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.4);
 }
 
 .btn-secondary {
@@ -99,6 +124,8 @@ body {
 .btn-secondary:hover {
     background-color: var(--dark-gray-1);
     border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
+    transform: translateY(-2px) scale(1.02);
 }
 
 .btn-outline {
@@ -108,8 +135,13 @@ body {
 }
 
 .btn-outline:hover {
-    background-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
+}
+
+.btn-outline:hover {
+    background: var(--accent-gradient);
     color: white;
+    transform: translateY(-2px) scale(1.02);
 }
 
 /* Hero Section */
@@ -171,8 +203,9 @@ body {
 }
 
 .feature-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-5px) scale(1.02);
     border-color: var(--accent);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
 }
 
 .feature-icon {
@@ -210,7 +243,7 @@ body {
 .step-number {
     width: 60px;
     height: 60px;
-    background-color: var(--accent);
+    background: var(--accent-gradient);
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -219,6 +252,15 @@ body {
     font-weight: bold;
     margin: 0 auto 1rem;
     color: white;
+    transition: transform 0.3s;
+}
+
+.step-number:hover {
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.4);
+}
+
+.step-number:hover {
+    transform: scale(1.1);
 }
 
 .step h3 {
@@ -252,7 +294,10 @@ body {
 .stat-number {
     font-size: 3rem;
     font-weight: bold;
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 0.5rem;
 }
 
@@ -272,7 +317,8 @@ body {
 
 .card:hover {
     border-color: var(--accent);
-    transform: translateY(-3px);
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
 }
 
 .card-title {
@@ -304,7 +350,8 @@ body {
 
 .task-card:hover {
     border-color: var(--accent);
-    transform: translateX(5px);
+    transform: translateX(5px) scale(1.01);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
 }
 
 .task-header {
@@ -321,7 +368,10 @@ body {
 }
 
 .task-company {
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 0.9rem;
 }
 
@@ -378,7 +428,7 @@ body {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    background-color: var(--accent);
+    background: var(--accent-gradient);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -406,7 +456,10 @@ body {
 .profile-stat-value {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .profile-stat-label {
@@ -443,7 +496,10 @@ body {
 
 .leaderboard-rank {
     font-weight: bold;
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     width: 60px;
 }
 
@@ -464,11 +520,17 @@ body {
     transition: all 0.3s;
 }
 
+.filter-btn:hover {
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
+}
+
 .filter-btn:hover,
 .filter-btn.active {
-    background-color: var(--accent);
+    background: var(--accent-gradient);
     border-color: var(--accent);
     color: white;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.4);
 }
 
 /* Achievements */
@@ -490,6 +552,11 @@ body {
 .achievement-card.unlocked {
     border-color: var(--accent);
     background-color: var(--dark-gray-2);
+}
+
+.achievement-card:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
 }
 
 .achievement-card.locked {
@@ -524,7 +591,8 @@ body {
 
 .vacancy-card:hover {
     border-color: var(--accent);
-    transform: translateX(5px);
+    transform: translateX(5px) scale(1.01);
+    box-shadow: 0 4px 20px rgba(64, 125, 196, 0.3);
 }
 
 .vacancy-header {
@@ -541,12 +609,18 @@ body {
 }
 
 .vacancy-company {
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-size: 1rem;
 }
 
 .vacancy-salary {
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     font-weight: bold;
     font-size: 1.2rem;
 }
@@ -596,6 +670,8 @@ body {
 .form-select:focus {
     outline: none;
     border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(64, 125, 196, 0.2);
+    transform: scale(1.01);
 }
 
 .form-textarea {
@@ -633,7 +709,10 @@ body {
 }
 
 .footer-section a:hover {
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .footer-section p {
@@ -711,7 +790,7 @@ body {
 
 .progress-fill {
     height: 100%;
-    background-color: var(--accent);
+    background: var(--accent-gradient);
     transition: width 0.3s;
 }
 
@@ -728,11 +807,45 @@ body {
 .level-number {
     font-size: 1.5rem;
     font-weight: bold;
-    color: var(--accent);
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 .level-label {
     color: var(--gray-white);
+}
+
+/* Glass effect for interactive elements */
+.btn,
+.filter-btn,
+.card,
+.task-card,
+.vacancy-card,
+.feature-card,
+.achievement-card {
+    position: relative;
+}
+
+.btn::before,
+.filter-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+.btn:hover::before,
+.filter-btn:hover::before {
+    opacity: 1;
 }
 
 /* Responsive */

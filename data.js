@@ -80,7 +80,7 @@ const appData = {
             difficulty: 'medium',
             experience: 25,
             status: 'active',
-            createdAt: '2024-01-15',
+            createdAt: '2025-01-15',
             tags: ['Алгоритмы', 'Базы данных', 'Оптимизация']
         },
         {
@@ -92,7 +92,7 @@ const appData = {
             difficulty: 'hard',
             experience: 50,
             status: 'active',
-            createdAt: '2024-01-20',
+            createdAt: '2025-01-20',
             tags: ['API', 'Backend', 'REST']
         },
         {
@@ -104,7 +104,7 @@ const appData = {
             difficulty: 'easy',
             experience: 10,
             status: 'active',
-            createdAt: '2024-01-18',
+            createdAt: '2025-01-18',
             tags: ['Анализ данных', 'Визуализация', 'Excel']
         },
         {
@@ -116,7 +116,7 @@ const appData = {
             difficulty: 'hard',
             experience: 50,
             status: 'active',
-            createdAt: '2024-01-22',
+            createdAt: '2025-01-22',
             tags: ['Кэширование', 'Redis', 'Backend']
         },
         {
@@ -128,7 +128,7 @@ const appData = {
             difficulty: 'easy',
             experience: 10,
             status: 'active',
-            createdAt: '2024-01-25',
+            createdAt: '2025-01-25',
             tags: ['Frontend', 'React', 'Формы']
         },
         {
@@ -140,7 +140,7 @@ const appData = {
             difficulty: 'hard',
             experience: 50,
             status: 'active',
-            createdAt: '2024-01-28',
+            createdAt: '2025-01-28',
             tags: ['Машинное обучение', 'Python', 'Анализ данных']
         },
         {
@@ -152,7 +152,7 @@ const appData = {
             difficulty: 'medium',
             experience: 25,
             status: 'active',
-            createdAt: '2024-02-01',
+            createdAt: '2025-02-01',
             tags: ['Рефакторинг', 'Тестирование', 'Документация']
         },
         {
@@ -164,7 +164,7 @@ const appData = {
             difficulty: 'medium',
             experience: 25,
             status: 'active',
-            createdAt: '2024-02-05',
+            createdAt: '2025-02-05',
             tags: ['Дашборд', 'Визуализация', 'Аналитика']
         }
     ],
@@ -175,7 +175,7 @@ const appData = {
             taskId: 1,
             userId: 1,
             status: 'approved',
-            completedAt: '2024-01-20',
+            completedAt: '2025-01-20',
             feedback: 'Отличное решение! Алгоритм оптимизирован корректно, время выполнения снижено до 0.4 секунд.',
             pinned: true
         },
@@ -184,7 +184,7 @@ const appData = {
             taskId: 3,
             userId: 1,
             status: 'approved',
-            completedAt: '2024-01-25',
+            completedAt: '2025-01-25',
             feedback: 'Хороший анализ данных, визуализация выполнена качественно.',
             pinned: false
         },
@@ -193,7 +193,7 @@ const appData = {
             taskId: 2,
             userId: 2,
             status: 'approved',
-            completedAt: '2024-01-28',
+            completedAt: '2025-01-28',
             feedback: 'API реализован правильно, хорошая структура кода.',
             pinned: true
         },
@@ -202,7 +202,7 @@ const appData = {
             taskId: 5,
             userId: 2,
             status: 'approved',
-            completedAt: '2024-02-01',
+            completedAt: '2025-02-01',
             feedback: 'Компонент работает стабильно, валидация реализована корректно.',
             pinned: false
         },
@@ -211,7 +211,7 @@ const appData = {
             taskId: 4,
             userId: 4,
             status: 'approved',
-            completedAt: '2024-02-03',
+            completedAt: '2025-02-03',
             feedback: 'Система кэширования работает отлично, учтены все требования.',
             pinned: true
         },
@@ -220,7 +220,7 @@ const appData = {
             taskId: 7,
             userId: 1,
             status: 'pending',
-            completedAt: '2024-02-10',
+            completedAt: '2025-02-10',
             feedback: null,
             pinned: false
         }
