@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Задачи - Юнию</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -83,7 +86,7 @@
     <script src="data.js"></script>
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             renderTasks();
             setupTaskFilters();
         });
@@ -126,9 +129,9 @@
                         </div>
                         <p class="card-content">${task.description}</p>
                         <div class="task-meta">
-                            <span>💎 Опыт: ${experience}</span>
-                            <span>📅 ${new Date(task.createdAt).toLocaleDateString('ru-RU')}</span>
-                            <span>👥 Решили: ${appData.solutions.filter(s => s.taskId === task.id && s.status === 'approved').length}</span>
+                            <span><i class="fa-solid fa-gem"></i> Опыт: ${experience}</span>
+                            <span><i class="fa-solid fa-calendar-alt"></i> ${new Date(task.createdAt).toLocaleDateString('ru-RU')}</span>
+                            <span><i class="fa-solid fa-users"></i> Решили: ${appData.solutions.filter(s => s.taskId === task.id && s.status === 'approved').length}</span>
                         </div>
                         <div style="margin-top: 1rem;">
                             <a href="task-detail.html?id=${task.id}" class="btn btn-primary">Подробнее</a>
@@ -141,7 +144,7 @@
         function setupTaskFilters() {
             const filterBtns = document.querySelectorAll('.filter-btn');
             filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     filterBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     renderTasks(this.dataset.filter);
@@ -150,5 +153,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>

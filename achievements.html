@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Достижения - Юнию</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -80,7 +83,7 @@
     <script src="data.js"></script>
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             renderAchievements('all');
             setupFilters();
         });
@@ -108,7 +111,7 @@
         function setupFilters() {
             const filterBtns = document.querySelectorAll('.filter-btn');
             filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     filterBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     renderAchievements(this.dataset.filter);
@@ -117,5 +120,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>

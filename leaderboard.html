@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Таблица лидеров - Юнию</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -94,7 +97,7 @@
     <script src="data.js"></script>
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             renderLeaderboard('all');
             setupFilters();
         });
@@ -146,8 +149,10 @@
             const tbody = document.getElementById('leaderboard-body');
             tbody.innerHTML = userStats.map((user, index) => {
                 const rank = index + 1;
-                const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '';
-                
+                const medal = rank === 1 ? '<i class="fa-solid fa-medal" style="color: gold;"></i>' :
+                    rank === 2 ? '<i class="fa-solid fa-medal" style="color: silver;"></i>' :
+                        rank === 3 ? '<i class="fa-solid fa-medal" style="color: #cd7f32;"></i>' : '';
+
                 return `
                     <tr>
                         <td class="leaderboard-rank">${medal} ${rank}</td>
@@ -163,7 +168,7 @@
         function setupFilters() {
             const filterBtns = document.querySelectorAll('.filter-btn');
             filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     filterBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     renderLeaderboard(this.dataset.period);
@@ -172,5 +177,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>

@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Панель работодателя - Юнию</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -114,7 +117,7 @@
     <script>
         const currentEmployerId = 1; // Текущий работодатель
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadEmployerTasks();
             setupTabs();
             loadStats();
@@ -123,17 +126,17 @@
         function setupTabs() {
             const filterBtns = document.querySelectorAll('.filter-btn');
             filterBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const tab = this.dataset.tab;
-                    
+
                     // Убираем активность со всех кнопок и скрываем все табы
                     filterBtns.forEach(b => b.classList.remove('active'));
                     document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
-                    
+
                     // Активируем выбранную кнопку и показываем таб
                     this.classList.add('active');
                     document.getElementById(tab + '-tab').style.display = 'block';
-                    
+
                     // Загружаем данные для таба
                     if (tab === 'tasks') {
                         loadEmployerTasks();
@@ -151,7 +154,7 @@
         function loadEmployerTasks() {
             const tasks = getEmployerTasks(currentEmployerId);
             const container = document.getElementById('employer-tasks');
-            
+
             if (tasks.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Нет созданных задач</p>';
                 return;
@@ -174,9 +177,9 @@
                         </div>
                         <p class="card-content">${task.description}</p>
                         <div class="task-meta">
-                            <span>📊 Решений: ${solutionsCount}</span>
-                            <span>✅ Одобрено: ${approvedCount}</span>
-                            <span>📅 ${formatDate(task.createdAt)}</span>
+                            <span><i class="fa-solid fa-chart-bar"></i> Решений: ${solutionsCount}</span>
+                            <span><i class="fa-solid fa-check-circle"></i> Одобрено: ${approvedCount}</span>
+                            <span><i class="fa-solid fa-calendar-alt"></i> ${formatDate(task.createdAt)}</span>
                         </div>
                         <div style="margin-top: 1rem;">
                             <a href="task-detail.html?id=${task.id}" class="btn btn-primary">Подробнее</a>
@@ -189,7 +192,7 @@
         function loadEmployerVacancies() {
             const vacancies = getEmployerVacancies(currentEmployerId);
             const container = document.getElementById('employer-vacancies');
-            
+
             if (vacancies.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Нет созданных вакансий</p>';
                 return;
@@ -207,8 +210,8 @@
                         </div>
                         <p class="card-content">${vacancy.description}</p>
                         <div class="task-meta">
-                            <span>📅 ${formatDate(vacancy.createdAt)}</span>
-                            <span>📊 Статус: ${vacancy.status === 'open' ? 'Открыта' : 'Закрыта'}</span>
+                            <span><i class="fa-solid fa-calendar-alt"></i> ${formatDate(vacancy.createdAt)}</span>
+                            <span><i class="fa-solid fa-chart-bar"></i> Статус: ${vacancy.status === 'open' ? 'Открыта' : 'Закрыта'}</span>
                         </div>
                         <div style="margin-top: 1rem;">
                             <a href="vacancy-detail.html?id=${vacancy.id}" class="btn btn-primary">Подробнее</a>
@@ -222,14 +225,14 @@
             // Получаем все задачи работодателя
             const employerTasks = getEmployerTasks(currentEmployerId);
             const taskIds = employerTasks.map(t => t.id);
-            
+
             // Получаем все решения на проверке для этих задач
-            const pendingSolutions = appData.solutions.filter(s => 
+            const pendingSolutions = appData.solutions.filter(s =>
                 taskIds.includes(s.taskId) && s.status === 'pending'
             );
 
             const container = document.getElementById('pending-solutions');
-            
+
             if (pendingSolutions.length === 0) {
                 container.innerHTML = '<p style="text-align: center; color: var(--gray-white); padding: 2rem;">Нет решений на проверке</p>';
                 return;
@@ -266,10 +269,10 @@
             const tasks = getEmployerTasks(currentEmployerId);
             const vacancies = getEmployerVacancies(currentEmployerId);
             const taskIds = tasks.map(t => t.id);
-            const pendingSolutions = appData.solutions.filter(s => 
+            const pendingSolutions = appData.solutions.filter(s =>
                 taskIds.includes(s.taskId) && s.status === 'pending'
             );
-            const approvedSolutions = appData.solutions.filter(s => 
+            const approvedSolutions = appData.solutions.filter(s =>
                 taskIds.includes(s.taskId) && s.status === 'approved'
             );
 
@@ -317,5 +320,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>

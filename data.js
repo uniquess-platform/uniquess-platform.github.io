@@ -9,7 +9,7 @@ const appData = {
             role: 'student',
             level: 5,
             experience: 450,
-            avatar: '👤'
+            avatar: '<i class="fa-solid fa-user"></i>'
         },
         {
             id: 2,
@@ -18,7 +18,7 @@ const appData = {
             role: 'student',
             level: 8,
             experience: 780,
-            avatar: '👩'
+            avatar: '<i class="fa-solid fa-user-graduate"></i>'
         },
         {
             id: 3,
@@ -27,7 +27,7 @@ const appData = {
             role: 'student',
             level: 3,
             experience: 250,
-            avatar: '👨'
+            avatar: '<i class="fa-solid fa-user-tie"></i>'
         },
         {
             id: 4,
@@ -36,7 +36,7 @@ const appData = {
             role: 'student',
             level: 12,
             experience: 1150,
-            avatar: '👩‍💼'
+            avatar: '<i class="fa-solid fa-user-astronaut"></i>'
         },
         {
             id: 5,
@@ -45,7 +45,7 @@ const appData = {
             role: 'student',
             level: 6,
             experience: 520,
-            avatar: '👨‍💻'
+            avatar: '<i class="fa-solid fa-user-ninja"></i>'
         }
     ],
 
@@ -290,56 +290,56 @@ const appData = {
             id: 1,
             title: 'Первые шаги',
             description: 'Решите первую задачу',
-            icon: '🎯',
+            icon: '<i class="fa-solid fa-bullseye"></i>',
             unlocked: true
         },
         {
             id: 2,
             title: 'Новичок',
             description: 'Достигните 5 уровня',
-            icon: '⭐',
+            icon: '<i class="fa-solid fa-star"></i>',
             unlocked: true
         },
         {
             id: 3,
             title: 'Мастер',
             description: 'Достигните 10 уровня',
-            icon: '👑',
+            icon: '<i class="fa-solid fa-crown"></i>',
             unlocked: false
         },
         {
             id: 4,
             title: 'Легко и просто',
             description: 'Решите 10 легких задач',
-            icon: '🌱',
+            icon: '<i class="fa-solid fa-seedling"></i>',
             unlocked: true
         },
         {
             id: 5,
             title: 'Средний уровень',
             description: 'Решите 5 средних задач',
-            icon: '📊',
+            icon: '<i class="fa-solid fa-chart-simple"></i>',
             unlocked: false
         },
         {
             id: 6,
             title: 'Эксперт',
             description: 'Решите 3 сложные задачи',
-            icon: '🔥',
+            icon: '<i class="fa-solid fa-fire"></i>',
             unlocked: false
         },
         {
             id: 7,
             title: 'Неделя продуктивности',
             description: 'Решите 7 задач за неделю',
-            icon: '📅',
+            icon: '<i class="fa-solid fa-calendar-check"></i>',
             unlocked: false
         },
         {
             id: 8,
             title: 'В топе',
             description: 'Попадите в топ-10 лидеров',
-            icon: '🏆',
+            icon: '<i class="fa-solid fa-trophy"></i>',
             unlocked: false
         }
     ],

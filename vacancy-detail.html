@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Детали вакансии - Юнию</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -32,8 +35,10 @@
         <div class="content-section">
             <div class="container">
                 <div style="max-width: 900px; margin: 0 auto;">
-                    <a href="vacancies.html" style="color: var(--accent); text-decoration: none; margin-bottom: 1rem; display: inline-block;">← Назад к вакансиям</a>
-                    
+                    <a href="vacancies.html"
+                        style="color: var(--accent); text-decoration: none; margin-bottom: 1rem; display: inline-block;">←
+                        Назад к вакансиям</a>
+
                     <div id="vacancy-detail" class="card" style="margin-top: 1rem;">
                         <!-- Загрузка через JS -->
                     </div>
@@ -75,10 +80,10 @@
     <script src="data.js"></script>
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
             const vacancyId = parseInt(urlParams.get('id'));
-            
+
             if (vacancyId) {
                 loadVacancyDetail(vacancyId);
             } else {
@@ -122,8 +127,8 @@
                         <h3 style="color: var(--white); margin-bottom: 1rem;">Необходимо решить задачи для отклика:</h3>
                         <div>
                             ${requiredTasks.map(task => {
-                                const isSolved = isTaskSolved(task.id, 1);
-                                return `
+                const isSolved = isTaskSolved(task.id, 1);
+                return `
                                     <div style="padding: 1rem; background: var(--dark-gray-1); border-radius: 6px; margin-bottom: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
                                         <div>
                                             <a href="task-detail.html?id=${task.id}" style="color: var(--accent); text-decoration: none;">
@@ -133,20 +138,20 @@
                                                 ${getDifficultyText(task.difficulty)}
                                             </span>
                                         </div>
-                                        ${isSolved ? 
-                                            '<span class="badge badge-success">✓ Решено</span>' : 
-                                            '<span class="badge badge-warning">Не решено</span>'
-                                        }
+                                        ${isSolved ?
+                        '<span class="badge badge-success"><i class="fa-solid fa-check"></i> Решено</span>' :
+                        '<span class="badge badge-warning">Не решено</span>'
+                    }
                                     </div>
                                 `;
-                            }).join('')}
+            }).join('')}
                         </div>
                         <div style="margin-top: 1rem; padding: 1rem; background: var(--dark-gray-1); border-radius: 6px;">
                             <strong style="color: ${canApply ? 'var(--accent)' : 'var(--gray-white)'};">
-                                ${canApply ? 
-                                    '✓ Все задачи решены! Вы можете откликнуться на вакансию.' : 
-                                    `Осталось решить ${requiredTasks.length - solvedTasks.length} из ${requiredTasks.length} задач`
-                                }
+                                ${canApply ?
+                        '<i class="fa-solid fa-check"></i> Все задачи решены! Вы можете откликнуться на вакансию.' :
+                        `Осталось решить ${requiredTasks.length - solvedTasks.length} из ${requiredTasks.length} задач`
+                    }
                             </strong>
                         </div>
                     </div>
@@ -180,12 +185,12 @@
         function submitApplication(event, vacancyId) {
             event.preventDefault();
             const formData = new FormData(event.target);
-            
+
             // В реальном приложении здесь был бы запрос к серверу
             alert('Отклик отправлен! Работодатель рассмотрит вашу кандидатуру в ближайшее время.');
             event.target.reset();
         }
     </script>
 </body>
-</html>
 
+</html>

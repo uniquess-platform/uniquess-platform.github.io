@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль - Юнию</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
+
 <body>
     <header class="header">
         <div class="container">
@@ -32,7 +35,7 @@
         <div class="profile-header">
             <div class="container">
                 <div class="profile-info">
-                    <div class="avatar" id="user-avatar">👤</div>
+                    <div class="avatar" id="user-avatar"><i class="fa-solid fa-user"></i></div>
                     <div class="profile-details">
                         <h2 id="user-name">Загрузка...</h2>
                         <div class="level-display">
@@ -121,7 +124,7 @@
     <script src="data.js"></script>
     <script src="script.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadUserProfile();
             loadQuests();
             loadSolvedTasks();
@@ -137,7 +140,7 @@
                     const exp = task ? (task.experience || (task.difficulty === 'easy' ? 10 : task.difficulty === 'medium' ? 25 : 50)) : 0;
                     return sum + exp;
                 }, 0);
-            
+
             const level = Math.floor(totalExperience / 100) + 1;
             const expToNextLevel = totalExperience % 100;
             const expProgress = (expToNextLevel / 100) * 100;
@@ -162,7 +165,7 @@
                             <p style="color: var(--gray-white); font-size: 0.9rem; margin-top: 0.25rem;">${quest.description}</p>
                         </div>
                         <span class="badge ${quest.completed ? 'badge-success' : 'badge-warning'}">
-                            ${quest.completed ? '✓ Выполнено' : quest.progress + '/' + quest.target}
+                            ${quest.completed ? '<i class="fa-solid fa-check"></i> Выполнено' : quest.progress + '/' + quest.target}
                         </span>
                     </div>
                     <div class="progress-bar" style="margin-top: 0.5rem;">
@@ -179,7 +182,7 @@
                             <p style="color: var(--gray-white); font-size: 0.9rem; margin-top: 0.25rem;">${quest.description}</p>
                         </div>
                         <span class="badge ${quest.completed ? 'badge-success' : 'badge-warning'}">
-                            ${quest.completed ? '✓ Выполнено' : quest.progress + '/' + quest.target}
+                            ${quest.completed ? '<i class="fa-solid fa-check"></i> Выполнено' : quest.progress + '/' + quest.target}
                         </span>
                     </div>
                     <div class="progress-bar" style="margin-top: 0.5rem;">
@@ -219,15 +222,15 @@
                     <div class="task-card">
                         <div class="task-header">
                             <div>
-                                <h3 class="task-title">${task.title} ${task.pinned ? '📌' : ''}</h3>
+                                <h3 class="task-title">${task.title} ${task.pinned ? '<i class="fa-solid fa-thumbtack"></i>' : ''}</h3>
                                 <div class="task-company">${task.company}</div>
                             </div>
                             <span class="task-difficulty ${difficultyClass}">${difficultyText}</span>
                         </div>
                         <p class="card-content">${task.description}</p>
                         <div class="task-meta">
-                            <span>✅ Решено: ${new Date(task.solution.completedAt).toLocaleDateString('ru-RU')}</span>
-                            ${task.solution.feedback ? `<span>💬 Фидбек: ${task.solution.feedback}</span>` : ''}
+                            <span><i class="fa-solid fa-check-circle"></i> Решено: ${new Date(task.solution.completedAt).toLocaleDateString('ru-RU')}</span>
+                            ${task.solution.feedback ? `<span><i class="fa-solid fa-comment"></i> Фидбек: ${task.solution.feedback}</span>` : ''}
                         </div>
                         <div style="margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem;">
                             <button class="btn btn-outline" onclick="togglePin(${task.id})">
@@ -250,7 +253,7 @@
 
         // Фильтры для решенных задач
         document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function () {
                 document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
                 loadSolvedTasks(this.dataset.filter);
@@ -258,5 +261,5 @@
         });
     </script>
 </body>
-</html>
 
+</html>
